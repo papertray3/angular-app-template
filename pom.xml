@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>gwitconfig</artifactId>
+	<packaging>jar</packaging>
+
+	<name>gwitconfig</name>
+	<description>Watson Configuration tool</description>
+
+	<parent>
+		<groupId>com.ibm.gwit</groupId>
+		<relativePath>../../gwit-parent</relativePath> <!-- lookup parent from repository -->
+		<artifactId>gwit-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<jaxb-package>com.ibm.gwit.gwitconfig.schema</jaxb-package>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>jcifs</groupId>
+			<artifactId>jcifs</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>jsr311-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.ibm.watson.core</groupId>
+			<artifactId>com.ibm.deepqa.runtime</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>activemq-core</artifactId>
+					<groupId>activemq</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>spring-asm</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-servlet</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<addResources>false</addResources>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>xjc</id>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!-- The package of your generated sources -->
+					<packageName>${jaxb-package}</packageName>
+					<sources>
+						<source>${basedir}/src/main/resources/schema</source>
+					</sources>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.build.directory}/generated-sources/jaxb</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<configuration>
+					<nodeVersion>${nodeVersion}</nodeVersion>
+					<npmVersion>${npmVersion}</npmVersion>
+				</configuration>
+				<executions>
+					<execution>
+						<id>clean</id>
+						<goals>
+							<goal>install-node-and-npm</goal>
+							<goal>gulp</goal>
+						</goals>
+						<phase>clean</phase>
+						<configuration>
+							<arguments>clean</arguments>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>npm install</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+
+						<!-- optional: default phase is "generate-resources" -->
+						<phase>generate-resources</phase>
+
+						<configuration>
+							<!-- optional: The default argument is actually "install", so unless 
+								you need to run some other npm command, you can remove this whole <configuration> 
+								section. -->
+							<arguments>install</arguments>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>build</id>
+						<goals>
+							<goal>install-node-and-npm</goal>
+							<goal>gulp</goal>
+						</goals>
+						<phase>generate-resources</phase>
+						<configuration>
+							<arguments>--env=${build.env}</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+
+</project>

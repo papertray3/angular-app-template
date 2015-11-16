@@ -1,0 +1,38 @@
+{
+  "name": "appName"
+  "version": "0.0.1"
+  "description": "description",
+  "main": "src/main/app/scripts/index.js",
+  "author": "Sean Thatcher",
+  "devDependencies": {
+    "babelify": "^6.4.0",
+    "brfs": "^1.4.1",
+    "browserify": "^11.2.0",
+    "bulk-require": "^0.2.1",
+    "bulkify": "^1.1.1",
+    "del": "^1.2.0",
+    "gulp": "^3.9.0",
+    "gulp-batch": "^1.0.5",
+    "gulp-concat": "^2.6.0",
+    "gulp-foreach": "^0.1.0",
+    "gulp-if": "^1.2.5",
+    "gulp-jshint": "^1.11.0",
+    "gulp-livereload": "^3.8.0",
+    "gulp-load-plugins": "^1.0.0-rc.1",
+    "gulp-preprocess": "^1.2.0",
+    "gulp-stylus": "^2.0.5",
+    "gulp-uglify": "^1.2.0",
+    "gulp-util": "^3.0.6",
+    "pluralize": "^1.2.1",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "angular": "^1.4.7",
+    "angular-ui-bootstrap": "^0.14.3",
+    "angular-ui-router": "^0.2.15",
+    "angular-ui-tree": "^2.10.0",
+    "bootstrap": "^3.3.5",
+    "jquery": "^2.1.4",
+  }
+}
