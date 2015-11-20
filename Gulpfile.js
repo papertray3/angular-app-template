@@ -87,10 +87,6 @@ var mod_assets = [{
 {
 	src: config.mods + 'angular-ui-tree/dist/angular-ui-tree.min.css',
 	dest: config.dest + 'css'
-},
-{
-	src: './src/simpleapp.js',
-	dest: config.dest + 'scripts'
 }
 ];
 
