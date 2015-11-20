@@ -87,4 +87,7 @@ for (var prop in modules) {
 }
 
 window.app = angular.module('app', requires);
+
+// make sure to use document.body instead of just document
+// otherwise you get a bug with drag n' drop in angular-ui-tree
 angular.bootstrap(document.body, ['app']);
