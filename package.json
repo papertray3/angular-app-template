@@ -11,6 +11,7 @@
     "bulk-require": "^0.2.1",
     "bulkify": "^1.1.1",
     "del": "^1.2.0",
+    "express": "^4.13.3",
     "gulp": "^3.9.0",
     "gulp-batch": "^1.0.5",
     "gulp-concat": "^2.6.0",

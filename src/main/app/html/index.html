@@ -1,32 +1,50 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<!-- @if build_env == 'dev' -->
-<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css">
-<!-- @endif -->
-<!-- @if build_env == 'prod' -->
-<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css"
-	href="css/bootstrap-theme.min.css">
-<!-- @endif -->
-<link rel="stylesheet" type="text/css" href="css/angular-csp.css">
-<link rel="stylesheet" type="text/css" href="css/style.css">
+	<!-- @if build_env == 'dev' -->
+	<!-- <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css"> -->
+	<!-- @endif -->
+	<!-- @if build_env == 'prod' -->
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
+	<!-- @endif -->
+	<link rel="stylesheet" type="text/css" href="css/angular-csp.css">
+	<link rel="stylesheet" type="text/css" href="css/angular-ui-tree.min.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body ng-cloak>
 
 
-	<div class="container">
-		<main-menu></main-menu>
-		<div ui-view></div>
+	<div class="container" ng-controller="HelloWorldController as hwc">
+		Content: <span class="glyphicon glyphicon-home"></span> {{hwc.greeting}}
+
+		<div ui-tree>
+			<ol ui-tree-nodes ng-model="hwc.rows">
+				<li ng-repeat="row in hwc.rows" ui-tree-node>
+					<div ui-tree-handle>
+						{{row.name}}
+					</div>
+
+					<ol ui-tree-nodes ng-model="row.columns">
+						<li ng-repeat="column in row.columns" ui-tree-node>
+							<div ui-tree-handle>
+								{{column.name}}
+							</div>
+						</li>
+					</ol>
+				</li>
+			</ol>
+		</div>
 
 
 
+		<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-tree/2.10.0/angular-ui-tree.min.js"></script> -->
 		<script src="scripts/<!-- @echo bundle -->"></script>
 		<!-- @if build_env == 'dev' -->
 		<script src="//localhost:<!-- @echo lrport -->/livereload.js"></script>
 		<!-- @endif -->
-	
+
 
 	</div>
 

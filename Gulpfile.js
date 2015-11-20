@@ -1,18 +1,20 @@
 'use strict';
 
 //var gulp = require('gulp'), gif = require('gulp-if'), gutil = require('gulp-util'), clean = require('del');
-var gulp = require('gulp'), clean = require('del');
+var gulp = require('gulp'),
+	clean = require('del'),
+	express = require('express');
 
 var plugins = require("gulp-load-plugins")({
-	pattern : [ 'gulp-*', 'gulp.*' ], // the glob(s) to search for 
-	scope : [ 'dependencies', 'devDependencies', 'peerDependencies' ], // which keys in the config to look within 
-	replaceString : /^gulp(-|\.)/, // what to remove from the name of the module when adding it to the context 
-	camelize : true, // if true, transforms hyphenated plugins names to camel case 
+	pattern : [ 'gulp-*', 'gulp.*' ], // the glob(s) to search for
+	scope : [ 'dependencies', 'devDependencies', 'peerDependencies' ], // which keys in the config to look within
+	replaceString : /^gulp(-|\.)/, // what to remove from the name of the module when adding it to the context
+	camelize : true, // if true, transforms hyphenated plugins names to camel case
 	lazy : true, // whether the plugins should be lazy loaded on demand
 	rename : {
 		'gulp-if' : 'gif'
 	}
-}); 
+});
 
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
@@ -22,9 +24,10 @@ var babelify = require('babelify');
 
 var config = {
 	src : './src/main/app/',
-	dest : './target/classes/static/',
+	dest : './dist/',
 	mods : './node_modules/',
 	lrport : 35729,
+	serverport: 5000,
 	stylus : {
 		'linenos' : true,
 		'include css' : true,
@@ -80,6 +83,14 @@ var mod_assets = [{
 {
 	src: config.mods + 'angular/angular-csp.css',
 	dest: config.dest + 'css'
+},
+{
+	src: config.mods + 'angular-ui-tree/dist/angular-ui-tree.min.css',
+	dest: config.dest + 'css'
+},
+{
+	src: './src/simpleapp.js',
+	dest: config.dest + 'scripts'
 }
 ];
 
@@ -107,12 +118,12 @@ gulp.task('build', ['mods', 'html', 'styles', 'lint', 'browserify' ], function()
 
 // Clean task
 gulp.task('clean', function() {
-	
+
 	var cleans = assets;
 	mod_assets.forEach(function(asset){
 		cleans.push(asset.dest);
 	});
- 
+
 	plugins.util.log('Removing:', assets);
 	clean.sync(assets);
 });
@@ -120,7 +131,7 @@ gulp.task('clean', function() {
 gulp.task('mods', function() {
 	mod_assets.forEach(function(asset){
 		plugins.util.log('Moving ' + asset.src + ' to ' + asset.dest);
-		gulp.src(asset.src).pipe(gulp.dest(asset.dest));		
+		gulp.src(asset.src).pipe(gulp.dest(asset.dest));
 	});
 });
 
@@ -140,14 +151,15 @@ gulp.task('styles', function() {
 // Browserify task
 gulp.task('browserify', function() {
 	var browserified = function(file) {
+		plugins.util.log("Browserifying file: " + file);
 		var b = browserify(file, config.browserify.options);
 		config.browserify.transforms.forEach(function(transform) {
 			b.transform(transform.name, transform.options);
 		});
 		return b.bundle();
 	};
-	
-	
+
+
 	// Single point of entry (make sure not to src ALL your files, browserify will figure it out)
 	browserified(paths.scripts.src + '/' + config.main)
 		.pipe(source(config.bundle))
@@ -167,7 +179,7 @@ gulp.task('html', function() {
 	}))
 	// And put it in the dist folder
 	.pipe(gulp.dest(paths.html.dest));
-	
+
 });
 
 gulp.task('watch', function() {
@@ -184,8 +196,16 @@ gulp.task('watch', function() {
 	gulp.watch([ paths.html.src + '/*', paths.html.src + '/**/*' ], [ 'html' ]);
 
 	gulp.watch(config.dest + '/**').on('change', plugins.livereload.changed);
-	
+
 
 });
+
+gulp.task('serve', ['build', 'watch'],function() {
+	var server = express();
+	server.use(express.static(config.dest));
+
+	server.listen(config.serverport);
+});
+
 
 gulp.task('default', [ 'build' ]);

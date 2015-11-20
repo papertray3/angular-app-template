@@ -6,24 +6,23 @@ var plural = require('pluralize');
 
 require('bootstrap');
 */
-window.jQuery = require('jquery');
-var angular = require('angular'); 
+var angular = require('angular');
 
 require('angular-ui-bootstrap');
 require('angular-ui-router');
 require('angular-ui-tree');
 
-var requires = [      
+var requires = [
                   'ui.bootstrap',
                   'ui.router',
                   'ui.tree'
                 ];
 
 /* get all objects below the current directory and load them into
- * the appropriate part of the application. New modules will be created 
+ * the appropriate part of the application. New modules will be created
  * for each directory.subdirectory all prefixed with 'app' and added to the requires
  * variable above. code should be split up into functional sections (i.e. controllers, services, etc.)
- * 
+ *
  * Each object should export the following:
  * {
  * 	exclude: true|false (optional, defaults to false)
@@ -34,18 +33,18 @@ var requires = [
  */
 
 //don't name any *.js file with any of the following:
-const ignores = ['exclude', 'type', 'name', 'fob']; 
+const ignores = ['exclude', 'type', 'name', 'fob'];
 
 /**
- * 
+ *
  * @param top - best guess as to what the thing is (makes the 'type' optional)
  * @param moduleName
  * @param objectName
  * @param object
  */
 function addModule(top, moduleName, objectName, object) {
-	
-	
+
+
 	if (object.fob && (object.exclude === undefined || object.exclude === false)) {
 		var mod;
 		try {
@@ -54,26 +53,25 @@ function addModule(top, moduleName, objectName, object) {
 			mod = angular.module(moduleName, []);
 			requires.push(moduleName);
 		}
-		
+
 		var type = object.type ? object.type : top;
-		
+
 		if (type === 'config' || type === 'run') {
 			mod[type](object.fob);
 		} else {
 			mod[type](object.name, object.fob);
 		}
 	}
-	
+
 	for (var prop in object) {
 		if (object.hasOwnProperty(prop) && ignores.indexOf(prop) === -1) {
 			addModule(top, moduleName + '.' + objectName, prop, object[prop]);
 		}
 	}
-	
+
 }
 
 const modules = bulk(__dirname, ['./**/!(*index|*.spec).js']);
-console.log(modules);
 
 //top level...expecting an object of objects
 for (var prop in modules) {
@@ -89,4 +87,4 @@ for (var prop in modules) {
 }
 
 window.app = angular.module('app', requires);
-angular.bootstrap(document, ['app']);
+angular.bootstrap(document.body, ['app']);
