@@ -1,6 +1,6 @@
 {
-  "name": "appName"
-  "version": "0.0.1"
+  "name": "appName",
+  "version": "0.0.1",
   "description": "description",
   "main": "src/main/app/scripts/index.js",
   "author": "Sean Thatcher",
@@ -33,6 +33,6 @@
     "angular-ui-router": "^0.2.15",
     "angular-ui-tree": "^2.10.0",
     "bootstrap": "^3.3.5",
-    "jquery": "^2.1.4",
+    "jquery": "^2.1.4"
   }
 }
